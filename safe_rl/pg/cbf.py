@@ -23,7 +23,7 @@ def build_barrier(self):
 
 #Get compensatory action based on satisfaction of barrier function
 def control_barrier(self, obs, u_rl, f, g, control_bound, distance, r1, r2):
-    velocity = f[0]
+    vel = f[0]
     #Set up Quadratic Program to satisfy Control Barrier Function
     G = np.array([[-np.dot(self.H1,g), -np.dot(self.H2,g), -np.dot(self.H3,g), -np.dot(self.H4,g), 1, -1, g[1], -g[1]], [-1, -1, -1, -1, 0, 0, 0, 0]])
     G = np.transpose(G)
@@ -45,11 +45,11 @@ def control_barrier(self, obs, u_rl, f, g, control_bound, distance, r1, r2):
     sol = solvers.qp(self.P, self.q, G, h)
     u_bar = sol['x']
 
-    if (np.add(np.squeeze(u_rl), np.squeeze(u_bar[0])) - 0.001 >= self.torque_bound):
-        u_bar[0] = self.torque_bound - u_rl
+    if (np.add(np.squeeze(u_rl), np.squeeze(u_bar[0])) - 0.001 >= control_bound):
+        u_bar[0] = control_bound - u_rl
         print("Error in QP")
-    elif (np.add(np.squeeze(u_rl), np.squeeze(u_bar[0])) + 0.001 <= -self.torque_bound):
-        u_bar[0] = -self.torque_bound - u_rl
+    elif (np.add(np.squeeze(u_rl), np.squeeze(u_bar[0])) + 0.001 <= -control_bound):
+        u_bar[0] = -control_bound - u_rl
         print("Error in QP")
     else:
         pass
