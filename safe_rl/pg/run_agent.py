@@ -18,7 +18,7 @@ from safe_rl.utils.mpi_tools import mpi_fork, proc_id, num_procs, mpi_sum
 # Multi-purpose agent runner for policy optimization algos 
 # (PPO, TRPO, their primal-dual equivalents, CPO)
 def run_polopt_agent(env_fn, 
-                     agent=PPOAgent(),
+                     agent=CPOAgent(),
                      actor_critic=mlp_actor_critic, 
                      ac_kwargs=dict(), 
                      seed=0,

@@ -42,7 +42,7 @@ def main(robot, task, algo, seed, exp_name, cpu):
 
     # Algo and Env
     algo = eval('safe_rl.'+algo)
-    env_name = 'Safexp-'+robot+task+'-v0'
+    env_name = 'Safe_Hazards_Env-v0'
 
     algo(env_fn=lambda: gym.make(env_name),
          ac_kwargs=dict(
