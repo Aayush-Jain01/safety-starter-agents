@@ -5,6 +5,8 @@ Created on Thu Aug 16 14:17:49 2018
 @author: rcheng
 """
 
+#######Do Something #######
+
 import numpy as np
 from cvxopt import matrix
 from cvxopt import solvers
@@ -22,7 +24,9 @@ def build_GP_model(self):
     self.GP_model = GP_list
 
 #Get the dynamics of the system from the current time step with the RL action
-def get_dynamics(self, obs, u_rl):
+
+#---------------------Change this function for our Safety Gym Environment-----------
+def get_dynamics(self, obs, u_rl):      
     dt = 0.05
     G = 10
     m = 2
@@ -36,7 +40,10 @@ def get_dynamics(self, obs, u_rl):
     x = np.array([theta, theta_dot])
     return [np.squeeze(f), np.squeeze(g), np.squeeze(x)]
 
+# -----------------------------------------------------------------------
+
 #Build barrier function model
+#-------------------Change this function wrt the Safety Gym Environment------------
 def update_GP_dynamics(self,path):
     N = self.observation_size
     X = path['Observation']
@@ -54,7 +61,9 @@ def update_GP_dynamics(self,path):
         err[i,:] = np.array([theta, theta_dot]) - f
     self.GP_model[0].fit(S,err[:,0])
     self.GP_model[1].fit(S,err[:,1])
-    
+#-----------------------------------------------------------------------------------
+
+#-----------Change this wrt the Safety Gym Environment-------------
 def get_GP_dynamics(self, obs, u_rl):
     u_rl = 0
     dt = 0.05
@@ -74,7 +83,8 @@ def get_GP_dynamics(self, obs, u_rl):
     f[0] = f_nom[0] + self.GP_model[0].predict(x.reshape(1,-1))
     f[1] = f_nom[1] + self.GP_model[1].predict(x.reshape(1,-1))
     return [np.squeeze(f), np.squeeze(g), np.squeeze(x), np.array([np.squeeze(std1), np.squeeze(std2)])]
-
+#-------------------------------------------------------------------------------------
+#-----------Change this wrt the Safety Gym Environment-------------
 def get_GP_dynamics_prev(self, obs, u_rl):
     u_rl = 0
     dt = 0.05
@@ -94,3 +104,4 @@ def get_GP_dynamics_prev(self, obs, u_rl):
     f[0] = f_nom[0] + self.GP_model_prev[0].predict(x.reshape(1,-1))
     f[1] = f_nom[1] + self.GP_model_prev[1].predict(x.reshape(1,-1))
     return [np.squeeze(f), np.squeeze(g), np.squeeze(x), np.array([np.squeeze(std1), np.squeeze(std2)])]
+#----------------------------------------------------------------------------------------    
